@@ -1,2 +1,2 @@
 # rsa-crypto
-RSA encryption algorithm implementation
+Simple RSA encryption algorithm implementation
