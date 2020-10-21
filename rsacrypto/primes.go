@@ -1,13 +1,11 @@
 package rsacrypto
 
 import (
-	"math/big"
-
 	"github.com/flaviowilker/rsa-crypto/util"
 )
 
-// ToChosePrimes ...
-func ToChosePrimes() *Primes {
+// NewPrimes ...
+func NewPrimes() *Primes {
 	primesSlice := make([]int, 2)
 
 	for i := 0; i < 2; i++ {
@@ -30,15 +28,13 @@ type Primes struct {
 }
 
 // GetNumberN ...
-func (p *Primes) GetNumberN() *big.Int {
+func (p *Primes) GetNumberN() int {
 	n := p.P * p.Q
-
-	return big.NewInt(int64(n))
+	return n
 }
 
 // GetNumberZ ...
-func (p *Primes) GetNumberZ() *big.Int {
+func (p *Primes) GetNumberZ() int {
 	z := (p.P - 1) * (p.Q - 1)
-
-	return big.NewInt(int64(z))
+	return z
 }

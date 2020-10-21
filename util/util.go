@@ -19,6 +19,19 @@ func IsPrime(number int) bool {
 	return number%number == 0
 }
 
+// IsMdcPrimes ...
+func IsMdcPrimes(num1, num2 int) bool {
+
+	var mdcPrimes func(num1, num2 int) int
+	mdcPrimes = func(num1, num2 int) int {
+		if num2 == 0 {
+			return num1
+		}
+		return mdcPrimes(num2, num1%num2)
+	}
+	return mdcPrimes(num1, num2) == 1
+}
+
 // RandomNumber ...
 func RandomNumber(minNumber int, maxNumber int) int {
 	rand.Seed(time.Now().UnixNano())
