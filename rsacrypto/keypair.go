@@ -10,7 +10,7 @@ import (
 // CreateKeyPair ...
 func CreateKeyPair() (*KeyPair, error) {
 
-	primes := ToChosePrimes()
+	primes := NewPrimes()
 
 	fmt.Println(primes)
 
