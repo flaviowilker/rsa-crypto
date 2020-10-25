@@ -8,7 +8,7 @@ import (
 
 func main() {
 
-	text := "Hello World"
+	text := "A"
 
 	keyPair := rsacrypto.NewKeyPair()
 
@@ -16,7 +16,7 @@ func main() {
 
 	fmt.Println(encrypted)
 
-	// decrypted := rsacrypto.DecryptText(keyPair.PrivateKey, encrypted)
+	decrypted := rsacrypto.DecryptText(keyPair.PrivateKey, encrypted)
 
-	// fmt.Println(decrypted)
+	fmt.Println(decrypted)
 }

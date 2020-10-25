@@ -1,49 +1,63 @@
 package util
 
 import (
+	"math/big"
 	"math/rand"
 	"time"
 )
 
 // IsPrime ...
-func IsPrime(number int) bool {
-	if number < 2 {
+func IsPrime(number *big.Int) bool {
+	if number.Cmp(big.NewInt(2)) == -1 {
 		return false
 	}
 
-	for i := 2; i < number; i++ {
-		if number%i == 0 {
+	numberInt := number.Int64()
+	for i := int64(2); i < numberInt; i++ {
+		mod := new(big.Int).Mod(number, big.NewInt(int64(i)))
+
+		if mod.Cmp(big.NewInt(0)) == 0 {
 			return false
 		}
 	}
-	return number%number == 0
+
+	mod := new(big.Int).Mod(number, number)
+
+	return mod.Cmp(big.NewInt(0)) == 0
 }
 
 // IsMdcPrimes ...
-func IsMdcPrimes(num1, num2 int) bool {
+func IsMdcPrimes(num1, num2 *big.Int) bool {
 
-	var mdcPrimes func(num1, num2 int) int
-	mdcPrimes = func(num1, num2 int) int {
-		if num2 == 0 {
+	var mdcPrimes func(num1, num2 *big.Int) *big.Int
+	mdcPrimes = func(num1, num2 *big.Int) *big.Int {
+		if num2.Cmp(big.NewInt(0)) == 0 {
 			return num1
 		}
-		return mdcPrimes(num2, num1%num2)
+
+		mod := new(big.Int).Mod(num1, num2)
+
+		return mdcPrimes(num2, mod)
 	}
-	return mdcPrimes(num1, num2) == 1
+
+	return mdcPrimes(num1, num2).Cmp(big.NewInt(1)) == 0
 }
 
 // RandomNumber ...
-func RandomNumber(minNumber int, maxNumber int) int {
+func RandomNumber(minNumber int, maxNumber int) *big.Int {
 	rand.Seed(time.Now().UnixNano())
-	return rand.Intn(maxNumber-minNumber+1) + minNumber
+	randomInt := rand.Int63n(int64(maxNumber-minNumber+1)) + int64(minNumber)
+
+	return big.NewInt(randomInt)
 }
 
 // SliceContains ...
-func SliceContains(slice []int, value int) bool {
+func SliceContains(slice []*big.Int, value *big.Int) bool {
 	for _, v := range slice {
-		if v == value {
+		if v.Cmp(value) == 0 {
 			return true
 		}
 	}
+
 	return false
 }

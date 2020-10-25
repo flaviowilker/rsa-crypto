@@ -9,8 +9,8 @@ func EncryptText(publicKey *PublicKey, text string) []int {
 	encrypted := make([]int, len(runes), len(runes))
 
 	for k, v := range runes {
-		power := math.Pow(float64(v), float64(publicKey.E))
-		mod := int(math.Mod(power, float64(publicKey.N)))
+		power := math.Pow(float64(v), float64(publicKey.E.Int64()))
+		mod := int(math.Mod(power, float64(publicKey.N.Int64())))
 
 		encrypted[k] = mod
 	}
@@ -25,7 +25,7 @@ func DecryptText(privateKey *PrivateKey, encrypted []int) string {
 
 	for k, v := range encrypted {
 		power := math.Pow(float64(v), privateKey.D)
-		mod := math.Mod(power, float64(privateKey.PublicKey.N))
+		mod := math.Mod(power, float64(privateKey.PublicKey.N.Int64()))
 
 		decrypted[k] = int(mod)
 	}
