@@ -2,19 +2,33 @@ package rsacrypto
 
 import (
 	"errors"
-	"fmt"
+	"math"
 
 	"github.com/flaviowilker/rsa-crypto/util"
 )
 
-// CreateKeyPair ...
-func CreateKeyPair() (*KeyPair, error) {
+// NewKeyPair ...
+func NewKeyPair() *KeyPair {
 
 	primes := NewPrimes()
+	keyPair := &KeyPair{Primes: primes}
 
-	fmt.Println(primes)
+	err := keyPair.createNumberN()
+	if err != nil {
+		panic(err)
+	}
 
-	return &KeyPair{}, nil
+	err = keyPair.createNumberE()
+	if err != nil {
+		panic(err)
+	}
+
+	err = keyPair.createNumberD()
+	if err != nil {
+		panic(err)
+	}
+
+	return keyPair
 }
 
 // KeyPair ...
@@ -23,46 +37,47 @@ type KeyPair struct {
 	PrivateKey *PrivateKey
 }
 
-// CreateNumberN ...
-func (k *KeyPair) CreateNumberN() error {
+func (k *KeyPair) createNumberN() error {
 	if k.Primes.P != 0 && k.Primes.Q != 0 {
-		k.PrivateKey.PublicKey.N = k.Primes.GetNumberN()
+		k.PrivateKey = &PrivateKey{}
+		k.PrivateKey.PublicKey = &PublicKey{}
+
+		k.PrivateKey.PublicKey.N = k.Primes.getNumberN()
 	} else {
 		return errors.New("field Primes is null")
 	}
 	return nil
 }
 
-// CreateNumberE ...
-func (k *KeyPair) CreateNumberE() error {
+func (k *KeyPair) createNumberE() error {
 	if k.Primes.P != 0 && k.Primes.Q != 0 {
-		var numberECreated bool
 		var e int
-		z := k.Primes.GetNumberZ()
+		z := k.Primes.getNumberZ()
 
-		for numberECreated == false {
+		for k.PrivateKey.PublicKey.E == 0 {
 			e = util.RandomNumber(2, 1000)
-			numberECreated = util.IsMdcPrimes(z, e)
+			if util.IsMdcPrimes(z, e) {
+				k.PrivateKey.PublicKey.E = e
+			}
 		}
-		k.PrivateKey.PublicKey.E = e
 	} else {
 		return errors.New("field Primes is null")
 	}
 	return nil
 }
 
-// CreateNumberD ...
-func (k *KeyPair) CreateNumberD() error {
+func (k *KeyPair) createNumberD() error {
 	if k.PrivateKey.PublicKey.E != 0 && k.Primes.P != 0 && k.Primes.Q != 0 {
-		var d int
-		e := k.PrivateKey.PublicKey.E
-		z := k.Primes.GetNumberZ()
+		e := float64(k.PrivateKey.PublicKey.E)
+		z := float64(k.Primes.getNumberZ())
+		d := float64((z + 1) / e)
 
-		for d == 0 {
-			randomD := util.RandomNumber(2, 1000)
-			if (e * randomD % z) == 1 {
-				d = randomD
-			}
+		mod := math.Mod((e * d), z)
+
+		if mod == 1.0 {
+			k.PrivateKey.D = d
+		} else {
+			return errors.New("create number 'd' not work")
 		}
 	} else {
 		return errors.New("field PrivateKey.PublicKey.E and Primes is null")
@@ -79,5 +94,5 @@ type PublicKey struct {
 // PrivateKey ...
 type PrivateKey struct {
 	PublicKey *PublicKey
-	D         int
+	D         float64
 }

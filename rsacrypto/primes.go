@@ -27,14 +27,12 @@ type Primes struct {
 	Q int
 }
 
-// GetNumberN ...
-func (p *Primes) GetNumberN() int {
+func (p *Primes) getNumberN() int {
 	n := p.P * p.Q
 	return n
 }
 
-// GetNumberZ ...
-func (p *Primes) GetNumberZ() int {
+func (p *Primes) getNumberZ() int {
 	z := (p.P - 1) * (p.Q - 1)
 	return z
 }

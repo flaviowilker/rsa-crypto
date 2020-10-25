@@ -1,8 +1,22 @@
 package main
 
-import "github.com/flaviowilker/rsa-crypto/rsacrypto"
+import (
+	"fmt"
+
+	"github.com/flaviowilker/rsa-crypto/rsacrypto"
+)
 
 func main() {
 
-	rsacrypto.CreateKeyPair()
+	text := "Hello World"
+
+	keyPair := rsacrypto.NewKeyPair()
+
+	encrypted := rsacrypto.EncryptText(keyPair.PrivateKey.PublicKey, text)
+
+	fmt.Println(encrypted)
+
+	// decrypted := rsacrypto.DecryptText(keyPair.PrivateKey, encrypted)
+
+	// fmt.Println(decrypted)
 }
