@@ -1,6 +1,9 @@
 package rsacrypto
 
-import "math"
+import (
+	"fmt"
+	"math/big"
+)
 
 // EncryptText ...
 func EncryptText(publicKey *PublicKey, text string) []int {
@@ -9,10 +12,15 @@ func EncryptText(publicKey *PublicKey, text string) []int {
 	encrypted := make([]int, len(runes), len(runes))
 
 	for k, v := range runes {
-		power := math.Pow(float64(v), float64(publicKey.E.Int64()))
-		mod := int(math.Mod(power, float64(publicKey.N.Int64())))
+		c := new(big.Int).Exp(big.NewInt(int64(v)), publicKey.E, publicKey.N)
 
-		encrypted[k] = mod
+		fmt.Println()
+		fmt.Println("char: ", big.NewInt(int64(v)))
+		fmt.Println("e: ", publicKey.E)
+		fmt.Println("n: ", publicKey.N)
+		fmt.Println("char crypto: ", c)
+
+		encrypted[k] = int(c.Int64())
 	}
 
 	return encrypted
@@ -24,10 +32,15 @@ func DecryptText(privateKey *PrivateKey, encrypted []int) string {
 	decrypted := make([]int, len(encrypted), len(encrypted))
 
 	for k, v := range encrypted {
-		power := math.Pow(float64(v), privateKey.D)
-		mod := math.Mod(power, float64(privateKey.PublicKey.N.Int64()))
+		m := new(big.Int).Exp(big.NewInt(int64(v)), privateKey.D, privateKey.PublicKey.N)
 
-		decrypted[k] = int(mod)
+		fmt.Println()
+		fmt.Println("char crypto: ", big.NewInt(int64(v)))
+		fmt.Println("d: ", privateKey.D)
+		fmt.Println("n: ", privateKey.PublicKey.N)
+		fmt.Println("char: ", m)
+
+		decrypted[k] = int(m.Int64())
 	}
 
 	var decryptedText string

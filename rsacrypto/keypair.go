@@ -5,10 +5,7 @@ func NewKeyPair() *KeyPair {
 
 	primes := newPrimes()
 	publicKey := newPublicKey(primes)
-	privateKey, err := newPrivateKey(primes, publicKey)
-	if err != nil {
-		panic(err)
-	}
+	privateKey := newPrivateKey(primes, publicKey)
 
 	keyPair := &KeyPair{Primes: primes, PrivateKey: privateKey}
 

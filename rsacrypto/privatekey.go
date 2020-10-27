@@ -1,32 +1,40 @@
 package rsacrypto
 
 import (
-	"errors"
-	"math"
+	"fmt"
+	"math/big"
+
+	"github.com/flaviowilker/rsa-crypto/util"
 )
 
-func newPrivateKey(primes *Primes, publicKey *PublicKey) (*PrivateKey, error) {
+func newPrivateKey(primes *Primes, publicKey *PublicKey) *PrivateKey {
 
-	eFloat := float64(publicKey.E.Int64())
-	zFloat := float64(primes.getNumberZ().Int64())
-	d := (zFloat + 1) / eFloat
+	e := publicKey.E
+	z := primes.getNumberZ()
 
-	mod := math.Mod((eFloat * d), zFloat)
+	fmt.Println("e: ", e)
+	fmt.Println("z: ", z)
 
-	if mod == 1.0 {
-		privateKey := &PrivateKey{
-			PublicKey: publicKey,
-			D:         d,
-		}
+	d := new(big.Int)
+	mod := new(big.Int)
 
-		return privateKey, nil
+	for mod.Cmp(big.NewInt(1)) != 0 {
+		d = util.RandomNumber(1, 10000)
+
+		mul := new(big.Int).Mul(e, d)
+		mod = mod.Mod(mul, z)
 	}
 
-	return nil, errors.New("PrivateKey: create number 'd' not work")
+	privateKey := &PrivateKey{
+		PublicKey: publicKey,
+		D:         d,
+	}
+
+	return privateKey
 }
 
 // PrivateKey ...
 type PrivateKey struct {
 	PublicKey *PublicKey
-	D         float64
+	D         *big.Int
 }

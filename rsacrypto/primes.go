@@ -1,6 +1,7 @@
 package rsacrypto
 
 import (
+	"fmt"
 	"math/big"
 
 	"github.com/flaviowilker/rsa-crypto/util"
@@ -14,13 +15,16 @@ func newPrimes() *Primes {
 	for i := 0; i < 2; i++ {
 		for primesSlice[i].Cmp(big.NewInt(0)) == 0 {
 
-			number := util.RandomNumber(1, 20)
+			number := util.RandomNumber(2, 100)
 
 			if !util.SliceContains(primesSlice, number) && util.IsPrime(number) {
 				primesSlice[i] = number
 			}
 		}
 	}
+
+	fmt.Println("p: ", primesSlice[0])
+	fmt.Println("q: ", primesSlice[1])
 
 	return &Primes{
 		P: primesSlice[0],
