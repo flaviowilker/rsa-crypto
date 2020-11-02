@@ -9,7 +9,7 @@ import (
 func newPrivateKey(primes *Primes, publicKey *PublicKey) *PrivateKey {
 
 	e := publicKey.E
-	z := primes.getNumberZ()
+	z := primes.GetNumberZ()
 
 	d := new(big.Int)
 	mod := new(big.Int)

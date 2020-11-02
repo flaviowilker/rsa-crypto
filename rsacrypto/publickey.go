@@ -7,8 +7,8 @@ import (
 )
 
 func newPublicKey(primes *Primes) *PublicKey {
-	n := primes.getNumberN()
-	z := primes.getNumberZ()
+	n := primes.GetNumberN()
+	z := primes.GetNumberZ()
 	e := new(big.Int)
 
 	for e.Cmp(big.NewInt(0)) == 0 {

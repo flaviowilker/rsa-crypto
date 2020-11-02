@@ -1,50 +1,38 @@
 package run
 
 import (
-	"bufio"
 	"flag"
 	"fmt"
-	"os"
-	"strings"
-
-	"github.com/flaviowilker/rsa-crypto/rsacrypto"
 )
 
 var verbose = flag.Bool("v", false, "verbose for algorithm")
+var keyPair = flag.Bool("keypair", false, "create keypair")
+var encrypt = flag.Bool("encrypt", false, "encrypt string")
+var decrypt = flag.Bool("decrypt", false, "encrypt string")
 
 // App ...
 func App() {
 	flag.Parse()
 
 	fmt.Println("RSA Crypto")
-	fmt.Println("---------------------")
+	fmt.Println("----------")
 
-	text := textReader()
-
-	encryptDecryptText(text, *verbose)
-}
-
-func textReader() string {
-	reader := bufio.NewReader(os.Stdin)
-	fmt.Print("Enter text: ")
-	text, err := reader.ReadString('\n')
-	if err != nil {
-		panic(err)
+	if *keyPair {
+		createKeyPair(*verbose)
 	}
-	text = strings.TrimSuffix(text, "\n")
-	fmt.Println()
+	if *encrypt {
+		publicKey := readPublicKey(*verbose)
+		text := readText()
+		encryptText(text, publicKey, *verbose)
+	}
+	if *decrypt {
+		privateKey := readPrivateKey(*verbose)
+		encryptedText := readEncryptedText()
+		decryptText(encryptedText, privateKey, *verbose)
+	}
 
-	return text
-}
-
-func encryptDecryptText(text string, verbose bool) {
-	crypto := rsacrypto.NewCrypto(verbose)
-
-	encrypted := crypto.EncryptText(text)
-	fmt.Print("Encrypted: ")
-	fmt.Println(encrypted)
-
-	decrypted := crypto.DecryptText(encrypted)
-	fmt.Print("Decrypted: ")
-	fmt.Println(decrypted)
+	if !*keyPair && !*encrypt && !*decrypt {
+		text := readText()
+		encryptDecryptText(text, *verbose)
+	}
 }

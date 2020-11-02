@@ -5,43 +5,10 @@ import (
 	"math/big"
 )
 
-// NewCrypto ...
-func NewCrypto(verbose bool) *Crypto {
-
-	keyPair := newKeyPair()
-
-	crypto := &Crypto{
-		KeyPair: keyPair,
-		Verbose: verbose,
-	}
-
-	if crypto.Verbose {
-		fmt.Println("Key numbers")
-		fmt.Println("n: ", crypto.KeyPair.PrivateKey.PublicKey.N)
-		fmt.Println("e: ", crypto.KeyPair.PrivateKey.PublicKey.E)
-		fmt.Println("d: ", crypto.KeyPair.PrivateKey.D)
-		fmt.Println("Prime numbers")
-		fmt.Println("p: ", crypto.KeyPair.Primes.P)
-		fmt.Println("q: ", crypto.KeyPair.Primes.Q)
-		fmt.Println("Other numbers")
-		fmt.Println("z: ", crypto.KeyPair.Primes.getNumberZ())
-		fmt.Println()
-	}
-
-	return crypto
-}
-
-// Crypto ...
-type Crypto struct {
-	KeyPair *KeyPair
-	Verbose bool
-}
-
 // EncryptText ...
-func (cr *Crypto) EncryptText(text string) []int {
+func EncryptText(text string, publicKey *PublicKey, verbose bool) []int {
 
-	if cr.Verbose {
-		fmt.Println()
+	if verbose {
 		fmt.Println("Encrypt text")
 	}
 
@@ -49,40 +16,47 @@ func (cr *Crypto) EncryptText(text string) []int {
 	encrypted := make([]int, len(runes), len(runes))
 
 	for k, v := range runes {
-		c := new(big.Int).Exp(big.NewInt(int64(v)), cr.KeyPair.PrivateKey.PublicKey.E, cr.KeyPair.PrivateKey.PublicKey.N)
+		c := new(big.Int).Exp(big.NewInt(int64(v)), publicKey.E, publicKey.N)
 
 		encrypted[k] = int(c.Int64())
 
-		if cr.Verbose {
-			fmt.Println("char ", k+1)
-			fmt.Println("char number: ", big.NewInt(int64(v)))
+		if verbose {
+			fmt.Printf("char %d: %s\n", k+1, string(rune(v)))
+			fmt.Println("char ascii: ", big.NewInt(int64(v)))
 			fmt.Println("char encrypted: ", c)
 		}
+	}
+
+	if verbose {
+		fmt.Println()
 	}
 
 	return encrypted
 }
 
 // DecryptText ...
-func (cr *Crypto) DecryptText(encrypted []int) string {
+func DecryptText(encrypted []int, privateKey *PrivateKey, verbose bool) string {
 
-	if cr.Verbose {
-		fmt.Println()
+	if verbose {
 		fmt.Println("Decrypt text")
 	}
 
 	decrypted := make([]int, len(encrypted), len(encrypted))
 
 	for k, v := range encrypted {
-		m := new(big.Int).Exp(big.NewInt(int64(v)), cr.KeyPair.PrivateKey.D, cr.KeyPair.PrivateKey.PublicKey.N)
+		m := new(big.Int).Exp(big.NewInt(int64(v)), privateKey.D, privateKey.PublicKey.N)
 
 		decrypted[k] = int(m.Int64())
 
-		if cr.Verbose {
-			fmt.Println("char ", k+1)
-			fmt.Println("char number: ", big.NewInt(int64(v)))
-			fmt.Println("char decrypted: ", m)
+		if verbose {
+			fmt.Printf("char %d: %s\n", k+1, string(rune(m.Int64())))
+			fmt.Println("char encrypted: ", big.NewInt(int64(v)))
+			fmt.Println("char ascii: ", m)
 		}
+	}
+
+	if verbose {
+		fmt.Println()
 	}
 
 	var decryptedText string

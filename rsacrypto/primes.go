@@ -34,13 +34,15 @@ type Primes struct {
 	Q *big.Int
 }
 
-func (p *Primes) getNumberN() *big.Int {
+// GetNumberN ...
+func (p *Primes) GetNumberN() *big.Int {
 	n := new(big.Int).Mul(p.P, p.Q)
 
 	return n
 }
 
-func (p *Primes) getNumberZ() *big.Int {
+// GetNumberZ ...
+func (p *Primes) GetNumberZ() *big.Int {
 	numA := new(big.Int).Sub(p.P, big.NewInt(1))
 
 	numB := new(big.Int).Sub(p.Q, big.NewInt(1))

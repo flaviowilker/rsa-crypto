@@ -1,6 +1,7 @@
 package rsacrypto
 
-func newKeyPair() *KeyPair {
+// NewKeyPair ...
+func NewKeyPair() *KeyPair {
 
 	primes := newPrimes()
 	publicKey := newPublicKey(primes)
