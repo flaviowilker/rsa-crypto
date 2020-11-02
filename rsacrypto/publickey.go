@@ -12,7 +12,7 @@ func newPublicKey(primes *Primes) *PublicKey {
 	e := new(big.Int)
 
 	for e.Cmp(big.NewInt(0)) == 0 {
-		randomE := util.RandomNumber(2, 200)
+		randomE := util.RandomNumber(10, 200)
 
 		if util.IsMdcPrimes(z, randomE) {
 			e = randomE

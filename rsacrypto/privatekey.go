@@ -15,7 +15,7 @@ func newPrivateKey(primes *Primes, publicKey *PublicKey) *PrivateKey {
 	mod := new(big.Int)
 
 	for mod.Cmp(big.NewInt(1)) != 0 {
-		d = util.RandomNumber(1, 10000)
+		d = util.RandomNumber(10, 10000)
 
 		mul := new(big.Int).Mul(e, d)
 		mod = mod.Mod(mul, z)

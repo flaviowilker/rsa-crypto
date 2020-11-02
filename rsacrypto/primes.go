@@ -14,7 +14,7 @@ func newPrimes() *Primes {
 	for i := 0; i < 2; i++ {
 		for primesSlice[i].Cmp(big.NewInt(0)) == 0 {
 
-			number := util.RandomNumber(2, 100)
+			number := util.RandomNumber(10, 100)
 
 			if !util.SliceContains(primesSlice, number) && util.IsPrime(number) {
 				primesSlice[i] = number
