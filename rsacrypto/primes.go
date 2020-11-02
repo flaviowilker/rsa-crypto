@@ -1,7 +1,6 @@
 package rsacrypto
 
 import (
-	"fmt"
 	"math/big"
 
 	"github.com/flaviowilker/rsa-crypto/util"
@@ -22,9 +21,6 @@ func newPrimes() *Primes {
 			}
 		}
 	}
-
-	fmt.Println("p: ", primesSlice[0])
-	fmt.Println("q: ", primesSlice[1])
 
 	return &Primes{
 		P: primesSlice[0],

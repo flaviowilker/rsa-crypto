@@ -1,7 +1,6 @@
 package rsacrypto
 
 import (
-	"fmt"
 	"math/big"
 
 	"github.com/flaviowilker/rsa-crypto/util"
@@ -11,9 +10,6 @@ func newPrivateKey(primes *Primes, publicKey *PublicKey) *PrivateKey {
 
 	e := publicKey.E
 	z := primes.getNumberZ()
-
-	fmt.Println("e: ", e)
-	fmt.Println("z: ", z)
 
 	d := new(big.Int)
 	mod := new(big.Int)
