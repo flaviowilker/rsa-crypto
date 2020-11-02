@@ -1,12 +1,10 @@
 package run
 
 import (
-	"bufio"
 	"fmt"
-	"os"
-	"strings"
 
 	"github.com/flaviowilker/rsa-crypto/rsacrypto"
+	"github.com/flaviowilker/rsa-crypto/util"
 )
 
 func createKeyPair(verbose bool) *rsacrypto.KeyPair {
@@ -34,13 +32,8 @@ func createKeyPair(verbose bool) *rsacrypto.KeyPair {
 }
 
 func readText() string {
-	reader := bufio.NewReader(os.Stdin)
 	fmt.Print("Enter text: ")
-	text, err := reader.ReadString('\n')
-	if err != nil {
-		panic(err)
-	}
-	text = strings.TrimSuffix(text, "\n")
+	text := util.TextReader()
 	fmt.Println()
 
 	return text

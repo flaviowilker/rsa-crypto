@@ -3,24 +3,31 @@ package run
 import (
 	"fmt"
 	"math/big"
+	"strconv"
 
 	"github.com/flaviowilker/rsa-crypto/rsacrypto"
+	"github.com/flaviowilker/rsa-crypto/util"
 )
 
 func readPublicKey(verbose bool) *rsacrypto.PublicKey {
 	fmt.Println("Public Key")
 
-	var n, e int
-
 	fmt.Println("Write the N number")
-	_, err := fmt.Scanf("%d", &n)
+	nString := util.TextReader()
+
+	fmt.Println("Write the E number")
+	eString := util.TextReader()
+
+	var n, e int
+	var err error
+
+	n, err = strconv.Atoi(nString)
 	if err != nil {
 		fmt.Println("error to read a integer")
 		panic(err)
 	}
 
-	fmt.Println("Write the E number")
-	_, err = fmt.Scanf("%d", &e)
+	e, err = strconv.Atoi(eString)
 	if err != nil {
 		fmt.Println("error to read a integer")
 		panic(err)

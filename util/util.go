@@ -1,8 +1,11 @@
 package util
 
 import (
+	"bufio"
 	"math/big"
 	"math/rand"
+	"os"
+	"strings"
 	"time"
 )
 
@@ -60,4 +63,16 @@ func SliceContains(slice []*big.Int, value *big.Int) bool {
 	}
 
 	return false
+}
+
+// TextReader ...
+func TextReader() string {
+	reader := bufio.NewReader(os.Stdin)
+	text, err := reader.ReadString('\n')
+	if err != nil {
+		panic(err)
+	}
+	text = strings.TrimRight(text, "\r\n")
+
+	return text
 }

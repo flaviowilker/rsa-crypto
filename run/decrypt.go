@@ -1,35 +1,39 @@
 package run
 
 import (
-	"bufio"
 	"fmt"
 	"math/big"
-	"os"
 	"strconv"
 	"strings"
 
 	"github.com/flaviowilker/rsa-crypto/rsacrypto"
+	"github.com/flaviowilker/rsa-crypto/util"
 )
 
 func readPrivateKey(verbose bool) *rsacrypto.PrivateKey {
 	fmt.Println("Private Key")
 
-	var n, d int
-
 	fmt.Println("Write the N number")
-	_, err := fmt.Scanf("%d", &n)
-	if err != nil {
-		fmt.Println("error to read a integer")
-		panic(err)
-	}
+	nString := util.TextReader()
 
 	fmt.Println("Write the D number")
-	_, err = fmt.Scanf("%d", &d)
+	dString := util.TextReader()
+	fmt.Println()
+
+	var n, d int
+	var err error
+
+	n, err = strconv.Atoi(nString)
 	if err != nil {
 		fmt.Println("error to read a integer")
 		panic(err)
 	}
-	fmt.Println()
+
+	d, err = strconv.Atoi(dString)
+	if err != nil {
+		fmt.Println("error to read a integer")
+		panic(err)
+	}
 
 	publicKey := &rsacrypto.PublicKey{
 		N: big.NewInt(int64(n)),
@@ -44,14 +48,9 @@ func readPrivateKey(verbose bool) *rsacrypto.PrivateKey {
 }
 
 func readEncryptedText() []int {
-	reader := bufio.NewReader(os.Stdin)
 	fmt.Println("Write separated by space \" \"")
 	fmt.Print("Enter the encrypted text: ")
-	text, err := reader.ReadString('\n')
-	if err != nil {
-		panic(err)
-	}
-	text = strings.TrimSuffix(text, "\n")
+	text := util.TextReader()
 	fmt.Println()
 
 	textSlice := strings.Split(text, " ")
